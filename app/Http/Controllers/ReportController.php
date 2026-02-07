@@ -5,23 +5,53 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Report;
+use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class ReportController extends Controller
 {
     use AuthorizesRequests;
 
-    public function index()
+    public function index(Request $request)
     {
         $user = auth()->user();
 
+        $query = Report::with('user');
+
         if ($user->isAdmin()) {
-            $reports = Report::with('user')->latest()->get();
+            // Admin filters
+            if ($request->filled('user_id')) {
+                $query->where('user_id', $request->user_id);
+            }
+            if ($request->filled('category')) {
+                $query->where('category', $request->category);
+            }
+            if ($request->filled('status')) {
+                $query->where('status', $request->status);
+            }
+            if ($request->filled('date_from')) {
+                $query->whereDate('created_at', '>=', $request->date_from);
+            }
+            if ($request->filled('date_to')) {
+                $query->whereDate('created_at', '<=', $request->date_to);
+            }
+            if ($request->filled('month')) {
+                $query->whereMonth('created_at', $request->month);
+            }
         } else {
-            $reports = Report::where('user_id', $user->id)->with('user')->latest()->get();
+            // Siswa only sees their own reports
+            $query->where('user_id', $user->id);
         }
 
-        return view('reports.index', compact('reports'));
+        $reports = $query->latest()->get();
+
+        // Get data for filters (admin only)
+        $users = [];
+        if ($user->isAdmin()) {
+            $users = User::where('role', 'siswa')->get();
+        }
+
+        return view('reports.index', compact('reports', 'users'));
     }
 
     public function create()
@@ -35,6 +65,7 @@ class ReportController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'location' => 'required|string|max:255',
+            'category' => 'required|in:infrastruktur,elektronik,kebersihan,keamanan,lainnya',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
@@ -43,6 +74,7 @@ class ReportController extends Controller
             'title' => $validated['title'],
             'description' => $validated['description'],
             'location' => $validated['location'],
+            'category' => $validated['category'],
         ];
 
         if ($request->hasFile('photo')) {

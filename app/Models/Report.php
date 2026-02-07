@@ -11,6 +11,7 @@ class Report extends Model
         'title',
         'description',
         'location',
+        'category',
         'photo_url',
         'status',
         'feedback',

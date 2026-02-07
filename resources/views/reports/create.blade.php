@@ -5,20 +5,20 @@
 @section('content')
 <div class="container mx-auto max-w-2xl">
     <h1 class="text-3xl font-bold text-gray-800 mb-6">Buat Laporan Kerusakan</h1>
-    
+
     <div class="bg-white rounded-lg shadow">
         <div class="p-6">
             @if($errors->any())
-                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                    @foreach($errors->all() as $error)
-                        {{ $error }}
-                    @endforeach
-                </div>
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                @foreach($errors->all() as $error)
+                {{ $error }}
+                @endforeach
+            </div>
             @endif
 
             <form action="{{ route('siswa.reports.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
-                
+
                 <div class="mb-6">
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="title">
                         Judul Laporan
@@ -31,6 +31,20 @@
                         Deskripsi Kerusakan
                     </label>
                     <textarea name="description" id="description" rows="4" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>{{ old('description') }}</textarea>
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="category">
+                        Kategori Kerusakan
+                    </label>
+                    <select name="category" id="category" class="form-input shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                        <option value="">Pilih Kategori</option>
+                        <option value="infrastruktur" {{ old('category') == 'infrastruktur' ? 'selected' : '' }}>Infrastruktur</option>
+                        <option value="elektronik" {{ old('category') == 'elektronik' ? 'selected' : '' }}>Elektronik</option>
+                        <option value="kebersihan" {{ old('category') == 'kebersihan' ? 'selected' : '' }}>Kebersihan</option>
+                        <option value="keamanan" {{ old('category') == 'keamanan' ? 'selected' : '' }}>Keamanan</option>
+                        <option value="lainnya" {{ old('category') == 'lainnya' ? 'selected' : '' }}>Lainnya</option>
+                    </select>
                 </div>
 
                 <div class="mb-6">
