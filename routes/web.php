@@ -18,6 +18,8 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('/profile/edit', [AuthController::class, 'editProfile'])->name('profile.edit');
+    Route::put('/profile', [AuthController::class, 'updateProfile'])->name('profile.update');
 
     Route::prefix('admin')->middleware('admin')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'admin'])->name('admin.dashboard');
