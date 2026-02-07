@@ -1,16 +1,17 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="{{ session('theme', 'light') }}">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Sistem Laporan Kerusakan')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="bg-gray-50">
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
     @if(auth()->check())
-    <nav class="bg-white shadow-lg border-b border-gray-200">
+    <nav class="bg-white dark:bg-gray-800 shadow-lg border-b border-gray-200 dark:border-gray-700">
         <div class="max-w-7xl mx-auto px-4">
             <div class="flex justify-between h-16">
                 <div class="flex items-center">
@@ -20,10 +21,27 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                             </svg>
                         </div>
-                        <h1 class="text-xl font-bold text-gray-900">Sistem Laporan Kerusakan</h1>
+                        <h1 class="text-xl font-bold text-gray-900 dark:text-gray-100">Sistem Laporan Kerusakan</h1>
                     </div>
                 </div>
                 <div class="flex items-center space-x-4">
+                    <!-- Theme Toggle Button -->
+                    <form action="{{ route('theme.switch') }}" method="POST" class="inline" id="themeForm">
+                        @csrf
+                        <input type="hidden" name="theme" id="themeInput" value="{{ session('theme', 'light') === 'dark' ? 'light' : 'dark' }}">
+                        <button type="submit" class="bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 font-medium py-2 px-3 rounded-lg transition-colors flex items-center" title="Ubah Tema">
+                            @if(session('theme', 'light') === 'dark')
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                                </svg>
+                            @else
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                                </svg>
+                            @endif
+                        </button>
+                    </form>
+
                     <div class="flex items-center space-x-3">
                         <div class="text-right">
                             <div class="text-sm font-medium text-gray-900">{{ auth()->user()->name }}</div>

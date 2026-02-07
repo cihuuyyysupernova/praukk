@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ThemeController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -21,6 +22,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile/edit', [AuthController::class, 'editProfile'])->name('profile.edit');
     Route::put('/profile', [AuthController::class, 'updateProfile'])->name('profile.update');
 
+    // Theme routes
+    Route::post('/theme/switch', [ThemeController::class, 'switch'])->name('theme.switch');
+
     Route::prefix('admin')->middleware('admin')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'admin'])->name('admin.dashboard');
         Route::get('/reports', [ReportController::class, 'index'])->name('admin.reports');
@@ -28,6 +32,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/reports/{report}/edit', [ReportController::class, 'edit'])->name('admin.reports.edit');
         Route::put('/reports/{report}', [ReportController::class, 'update'])->name('admin.reports.update');
         Route::delete('/reports/{report}', [ReportController::class, 'destroy'])->name('admin.reports.destroy');
+        Route::get('/reports/export', [ReportController::class, 'export'])->name('admin.reports.export');
     });
 
     Route::prefix('siswa')->middleware('siswa')->group(function () {

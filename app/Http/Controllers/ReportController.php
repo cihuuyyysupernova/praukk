@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\Report;
 use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use App\Exports\ReportsExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ReportController extends Controller
 {
@@ -127,5 +129,51 @@ class ReportController extends Controller
 
         return redirect()->route('admin.reports')
             ->with('success', 'Laporan berhasil dihapus!');
+    }
+
+    /**
+     * Export data laporan ke Excel
+     * Fungsi: Mengexport data laporan berdasarkan filter yang aktif
+     * @param Request $request - Parameter filter untuk export
+     * Return: File Excel download
+     */
+    public function export(Request $request)
+    {
+        $user = auth()->user();
+
+        // Hanya admin yang bisa export
+        if (!$user->isAdmin()) {
+            abort(403, 'Unauthorized');
+        }
+
+        // Build query dengan filter yang sama seperti index
+        $query = Report::with('user');
+
+        if ($request->filled('user_id')) {
+            $query->where('user_id', $request->user_id);
+        }
+        if ($request->filled('category')) {
+            $query->where('category', $request->category);
+        }
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+        if ($request->filled('date_from')) {
+            $query->whereDate('created_at', '>=', $request->date_from);
+        }
+        if ($request->filled('date_to')) {
+            $query->whereDate('created_at', '<=', $request->date_to);
+        }
+        if ($request->filled('month')) {
+            $query->whereMonth('created_at', $request->month);
+        }
+
+        $reports = $query->latest()->get();
+
+        // Generate filename dengan timestamp
+        $filename = 'laporan_kerusakan_' . date('Y-m-d_H-i-s') . '.xlsx';
+
+        // Export dan download
+        return Excel::download(new ReportsExport($reports), $filename);
     }
 }

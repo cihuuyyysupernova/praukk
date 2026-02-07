@@ -24,6 +24,84 @@
     --border-color: #e2e8f0;
 }
 
+/* Dark Theme */
+[data-theme="dark"] {
+    --primary-blue: #3b82f6;
+    --primary-blue-dark: #2563eb;
+    --primary-blue-light: #60a5fa;
+    --secondary-blue: #93c5fd;
+    --accent-blue: #1e3a8a;
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --border-color: #334155;
+}
+
+/* Terapkan warna tema ke elemen */
+[data-theme="dark"] body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+[data-theme="dark"] .bg-white {
+    background-color: var(--bg-primary) !important;
+    transition: background-color 0.3s ease;
+}
+
+[data-theme="dark"] .bg-gray-50 {
+    background-color: var(--bg-secondary) !important;
+    transition: background-color 0.3s ease;
+}
+
+[data-theme="dark"] .bg-gray-100 {
+    background-color: #374151 !important;
+    transition: background-color 0.3s ease;
+}
+
+[data-theme="dark"] .text-gray-900 {
+    color: var(--text-primary) !important;
+    transition: color 0.3s ease;
+}
+
+[data-theme="dark"] .text-gray-700 {
+    color: var(--text-secondary) !important;
+    transition: color 0.3s ease;
+}
+
+[data-theme="dark"] .text-gray-600 {
+    color: #9ca3af !important;
+    transition: color 0.3s ease;
+}
+
+[data-theme="dark"] .text-gray-500 {
+    color: #6b7280 !important;
+    transition: color 0.3s ease;
+}
+
+[data-theme="dark"] .border-gray-200 {
+    border-color: var(--border-color) !important;
+    transition: border-color 0.3s ease;
+}
+
+[data-theme="dark"] .border-gray-300 {
+    border-color: #4b5563 !important;
+    transition: border-color 0.3s ease;
+}
+
+[data-theme="dark"] .hover\:bg-gray-50:hover {
+    background-color: var(--bg-secondary) !important;
+}
+
+[data-theme="dark"] .hover\:bg-gray-100:hover {
+    background-color: #374151 !important;
+}
+
+[data-theme="dark"] .hover\:bg-gray-200:hover {
+    background-color: #4b5563 !important;
+}
+
 /* Page Transitions */
 .page-enter {
     opacity: 0;
@@ -55,6 +133,11 @@
 .card-hover:hover {
     transform: translateY(-4px);
     box-shadow: 0 10px 25px rgba(37, 99, 235, 0.15);
+}
+
+/* Dark theme card hover */
+[data-theme="dark"] .card-hover:hover {
+    box-shadow: 0 10px 25px rgba(59, 130, 246, 0.25);
 }
 
 /* Button Animations */
